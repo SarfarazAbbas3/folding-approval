@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Folding Approval Sheet</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--text:#1a1f24;--muted:#5b6670;--line:#b9c3cc;--head:#8fcf8f;--band:#bcd6f0;--accent:#1f6feb;--hl:#e8f2ff;--cellbg:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181c;--card:#1d2328;--text:#e8edf1;--muted:#9aa6b0;--line:#3e4953;--head:#2f6b3a;--band:#27456b;--accent:#4c8dff;--hl:#243445;--cellbg:#1d2328;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14181c;--card:#1d2328;--text:#e8edf1;--muted:#9aa6b0;--line:#3e4953;--head:#2f6b3a;--band:#27456b;--accent:#4c8dff;--hl:#243445;--cellbg:#1d2328;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+.top{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;align-items:end}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:2px}
+.f{width:100%;padding:7px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px}
+.wrap{overflow:auto;max-height:68vh;border:1px solid var(--line)}
+.ttl{background:var(--band);text-align:center;font-style:italic;font-weight:700;padding:7px;font-size:15px;position:sticky;left:0}
+table{border-collapse:collapse;min-width:1500px;width:100%;font-size:12px;background:var(--cellbg)}
+th{background:var(--head);padding:6px 4px;border:1px solid var(--line);font-size:11px;position:sticky;top:0;z-index:2;outline:none}
+td{border:1px solid var(--line);padding:0}
+td input{width:100%;border:0;border-radius:0;background:transparent;color:var(--text);padding:8px 4px;font-size:12px;text-align:center;min-width:72px;font-family:inherit}
+td input:focus{outline:2px solid var(--accent);outline-offset:-2px;background:var(--hl)}
+tr:focus-within td{background:var(--hl)}
+td:first-child input{min-width:40px;width:46px;color:var(--muted)}
+td:nth-child(4) input{min-width:180px}
+td.a{white-space:nowrap;text-align:center;padding:0 4px;width:90px}
+td.a button{padding:2px 6px;font-size:12px;border-radius:5px}
+tfoot td{font-weight:700;text-align:center;padding:8px;font-size:14px;background:var(--card)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+button{border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 14px;border-radius:8px;font-size:14px;cursor:pointer}
+button.p{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
+:root{--bg:#eef1f7;--card:#fff;--text:#16213a;--muted:#6b7690;--line:#d5dbe8;--head:#0f766e;--band:#1e2a78;--accent:#4f46e5;--hl:#eef0ff;--cellbg:#fff;--zebra:#f7f9fd}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1020;--card:#141b30;--text:#e6ebf7;--muted:#93a0bd;--line:#2a3554;--accent:#7c83ff;--hl:#1c2650;--cellbg:#141b30;--zebra:#101728}}
+:root[data-theme="dark"]{--bg:#0b1020;--card:#141b30;--text:#e6ebf7;--muted:#93a0bd;--line:#2a3554;--accent:#7c83ff;--hl:#1c2650;--cellbg:#141b30;--zebra:#101728}
+body{background:radial-gradient(1100px 480px at 8% -10%,rgba(79,70,229,.2),transparent),var(--bg);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.hero{background:linear-gradient(135deg,#1e2a78,#4f46e5 60%,#7c3aed);color:#fff;border-radius:16px;padding:18px 20px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 10px 30px rgba(79,70,229,.3)}
+.hero h2{margin:0;font-size:22px;letter-spacing:.16em;font-weight:800}
+.hero small{opacity:.85;display:block;margin-top:4px}
+.hero .hb{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.45)}
+.hero .hw{background:#fff;color:#4f46e5;border:0}
+.card{border-radius:14px;box-shadow:0 4px 18px rgba(20,30,70,.1)}
+.ttl{background:linear-gradient(90deg,#1e2a78,#4f46e5);color:#fff;letter-spacing:.22em;font-style:normal}
+th{background:linear-gradient(#14907f,#0f766e);color:#fff;border-color:rgba(255,255,255,.25)}
+tbody tr:nth-child(even) td{background:var(--zebra)}
+tr:focus-within td{background:var(--hl)!important}
+button{border-radius:10px;font-weight:600}
+button.p{background:linear-gradient(135deg,#4f46e5,#7c3aed);border:0}
+td:first-child input{font-weight:700;color:var(--accent)}
+#dock{display:none}
+@media (max-width:0px){
+body{padding:8px 8px 96px}
+.hero{padding:14px 16px}.hero h2{font-size:18px;letter-spacing:.1em}
+.hero .bar{display:none}
+.card{padding:8px}
+.wrap{max-height:none;overflow:visible;border:0}
+.ttl{display:none}
+table{min-width:0;display:block;background:transparent}
+thead,tfoot{display:none}
+tbody{display:block}
+tbody tr{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:14px;margin-bottom:12px;background:var(--card);overflow:hidden;box-shadow:0 3px 12px rgba(20,30,70,.1)}
+tbody tr td,tbody tr:nth-child(even) td{display:block;border:0;border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:6px 10px;background:transparent;text-align:left}
+td::before{content:attr(data-l);display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+td input,td:first-child input,td:nth-child(4) input{min-width:0;width:100%;text-align:left;font-size:16px;padding:5px 0}
+td:first-child,td:nth-child(4),td:nth-child(6),td.a{grid-column:1/-1}
+td:first-child{background:var(--hl)!important}
+td.a{width:auto;text-align:right;padding:6px 10px}
+td.a::before{display:none}
+td.a button{padding:6px 12px;font-size:14px}
+#dock{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:20;gap:8px;align-items:center;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--line);box-shadow:0 -4px 16px rgba(20,30,70,.12)}
+#dock button{padding:11px 14px}
+}
+@media (max-width:760px){
+body{padding:8px 8px 96px}
+.hero{padding:14px 16px}.hero h2{font-size:18px;letter-spacing:.1em}
+.hero .bar{display:none}
+.card{padding:6px}
+.wrap{max-height:none;-webkit-overflow-scrolling:touch}
+td input{font-size:16px;min-width:92px}
+td:first-child input{min-width:44px}
+#dock{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:20;gap:8px;align-items:center;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--line);box-shadow:0 -4px 16px rgba(20,30,70,.12)}
+#dock button{padding:11px 14px}
+}
+#prep:empty::before{content:attr(data-ph);color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div><h2>FOLDING APPROVAL</h2><small id="heroDay"></small><small>Developed by: Sarfaraz Abbas</small></div>
+  <div class="bar" style="margin:0"><button class="hb" onclick="dl()">⬇ PDF Download</button><button class="hw" onclick="shareDirect()">📤 PDF Share</button><button class="hb" onclick="send()">💬 WhatsApp Web</button></div>
+</div>
+<div class="card" style="display:none">
+  <div class="top">
+    <div><label>Din (Sheet)</label><select id="day" class="f" onchange="pickDay(this.value)"></select></div>
+    <div><label>WhatsApp Number (optional)</label><input id="to" type="tel" class="f" placeholder="923001234567"></div>
+    <div><label>Message</label><input id="sub" class="f" value="Folding Approval"></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="wrap" id="wrap">
+    <div class="ttl" id="ttl" contenteditable="true">FOLDING APPROVAL</div>
+    <table>
+      <thead><tr id="hd"><th>S.NO</th><th>DATE</th><th>TIME</th><th>CUSTOMER</th><th>JOBS</th><th>DESIGN NAME</th><th>COLORWAY</th><th>VERSION</th><th>CONSTRUCTION</th><th>GREIGE WIDTH</th><th>FINISH WIDTH</th><th>PROGRAM METERS</th><th>BATCHER</th><th>REMARKS</th><th></th></tr></thead>
+      <tbody id="tb"></tbody>
+      <tfoot><tr><td colspan="11" style="text-align:left;font-size:12px;padding-left:12px"><b>Prepared by:</b> <span id="prep" contenteditable="true" data-ph="Naam likho" style="display:inline-block;min-width:160px;outline:none;border-bottom:1px dashed var(--muted)"></span></td><td id="tot">0</td><td colspan="3"></td></tr></tfoot>
+    </table>
+  </div>
+  <div class="bar">
+    <button onclick="addRows(5)">+ 5 Rows</button>
+    <button onclick="dl()">⬇ PDF Download</button>
+    <button class="p" onclick="shareDirect()">📤 PDF Share</button>
+    <button onclick="send()">💬 WhatsApp Web</button>
+    <button onclick="clearSheet()">Sheet clear</button>
+  </div>
+  <div class="note" id="msg">Har cell, heading aur title par click karke edit karo. <b>Enter/↓</b> neeche, <b>Shift+Enter/↑</b> upar, <b>Tab/←→</b> side me. <b>Ctrl+D</b> upar wali cell copy karta hai. Excel se cells copy karke seedha paste bhi kar sakte ho. S.NO khud lagta hai; Date, Time, Colorway, Remarks sab khud manually likhne hain.<br>Send dabane par PDF download hoti hai aur WhatsApp Web khulta hai; phir chat me 📎 → Document se PDF attach karo. Mobile par PDF seedha WhatsApp me share hoti hai.</div>
+</div>
+
+<div id="dock"><div style="flex:1"><div style="font-size:10px;color:var(--muted)">TOTAL METERS</div><b id="tot2" style="font-size:18px">0</b></div><button onclick="dl()">⬇ PDF</button><button class="p" onclick="shareDirect()">📤 PDF Share</button></div>
+<datalist id="dl_c"></datalist><datalist id="dl_v"></datalist><datalist id="dl_k"></datalist><datalist id="dl_g"></datalist><datalist id="dl_f"></datalist><datalist id="dl_b"></datalist>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const COLS=14,MI=11;
+const LISTS={3:"dl_c",7:"dl_v",8:"dl_k",9:"dl_g",10:"dl_f",12:"dl_b"};
+const sd=(c,v,k,g,f,b)=>{const r=Array(COLS).fill("");r[3]=c;r[7]=v;r[8]=k;r[9]=g;r[10]=f;r[12]=b;return r};
+const SL="SALEEM LALA",BS="BIN SAEED (REHMAN / RAZA BHAI)";
+const SEED=[sd(SL,"SHIRT","40*12/76*38",'43"','38"',"W-026"),sd(SL,"DUPATTA","40*12/76*36",'43"','38"',"W-026"),sd(BS,"TROUSER","40*12/76*42",'43"','40"',"W-270"),sd(BS,"DUPATTA","40*12/76*36",'43"','40"',"W-012")];
+const esc=v=>String(v??"").replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+const filled=r=>[3,4,5,11].some(i=>String(r[i]).trim());
+const num=v=>parseFloat(String(v).replace(/,/g,""))||0;
+function nowD(){const d=new Date();return String(d.getDate()).padStart(2,"0")+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+d.getFullYear()}
+function nowT(){const d=new Date();let h=d.getHours();const m=String(d.getMinutes()).padStart(2,"0"),a=h>=12?"PM":"AM";h=h%12||12;return h+":"+m+a}
+let days={};try{days=JSON.parse(localStorage.getItem("fa2_days")||"{}")}catch(e){}
+try{["to","sub"].forEach(k=>{const v=localStorage.getItem("fa2_"+k);if(v)$(k).value=v;$(k).addEventListener("input",()=>{try{localStorage.setItem("fa2_"+k,$(k).value)}catch(e){}})})}catch(e){}
+let cur=nowD(),rows=[];
+function newRow(n){return Array(COLS).fill("")}
+function renum(){}
+const MINR=12,MINB=3;
+function ensureBlank(){let t=0;for(let i=rows.length-1;i>=0&&!filled(rows[i]);i--)t++;while(t<MINB){rows.push(newRow(rows.length+1));t++}}
+function pool(){const a=[...SEED];Object.keys(days).forEach(k=>{if(k!==cur)a.push(...days[k])});return a.concat(rows.filter(filled))}
+function saveDay(){days[cur]=rows.filter(filled);try{localStorage.setItem("fa2_days",JSON.stringify(days))}catch(e){}fillDays()}
+function dkey(s){return s.split("-").reverse().join("")}
+function fillDays(){const ks=[...new Set([...Object.keys(days).filter(k=>days[k].length),nowD(),cur])].sort((a,b)=>dkey(b).localeCompare(dkey(a)));
+  $("day").innerHTML=ks.map(k=>`<option value="${k}" ${k===cur?"selected":""}>${k}${k===nowD()?" (Aaj)":""}</option>`).join("")+`<option value="__new">+ Nayi date ki sheet...</option>`}
+function pickDay(v){if(v==="__new"){v=prompt("Date (DD-MM-YYYY)",nowD());if(!v){fillDays();return}}loadDay(v.trim())}
+function loadDay(d){if(rows.length)saveDay();cur=d;$("heroDay").textContent="Sheet: "+d;rows=(days[d]||[]).map(r=>[...r]);while(rows.length<MINR)rows.push(newRow(rows.length+1));ensureBlank();render();fillDays()}
+function rowHtml(i){const r=rows[i];return "<tr>"+r.map((v,c)=>`<td data-l="${esc(heads()[c]||"")}"><input data-c="${c}" ${c===MI?'inputmode="decimal"':""} ${c===0?'readonly tabindex="-1"':""} value="${esc(v)}"></td>`).join("")+`<td class="a"><button title="Copy row" onclick="rowOp(this,'dup')">⧉</button> <button title="Row add" onclick="rowOp(this,'ins')">＋</button> <button title="Delete" onclick="rowOp(this,'del')" style="color:#d33">✕</button></td></tr>`}
+function sno(){let n=0;rows.forEach(r=>{r[0]=filled(r)?String(++n):""})}
+function paintSno(){sno();[...tb.children].forEach((tr,i)=>{const x=tr.querySelector("input");if(x)x.value=rows[i][0]})}
+function render(){sno();$("tb").innerHTML=rows.map((_,i)=>rowHtml(i)).join("");total();refreshLists()}
+function sum(){return rows.filter(filled).reduce((a,r)=>a+num(r[MI]),0)}
+function total(){$("tot").textContent=$("tot2").textContent=sum().toLocaleString("en-US")}
+function refreshLists(){Object.keys(LISTS).forEach(c=>{const u=[...new Set(pool().map(r=>String(r[c]||"").trim()).filter(Boolean))];$(LISTS[c]).innerHTML=u.map(v=>`<option value="${esc(v)}">`).join("")})}
+const tb=$("tb"),idx=t=>[...tb.children].indexOf(t.closest("tr"));
+const cell=(i,c)=>tb.children[i]&&tb.children[i].querySelectorAll("input")[c];
+function go(i,c){const n=cell(i,c);if(n){n.focus()}}
+tb.addEventListener("focusin",e=>{if(e.target.dataset.c!==undefined)setTimeout(()=>e.target.select(),0)});
+tb.addEventListener("input",e=>{const t=e.target;if(t.dataset.c===undefined)return;const i=idx(t),c=+t.dataset.c;rows[i][c]=t.value;if(c===MI)total();
+  const before=rows.length;ensureBlank();for(let k=before;k<rows.length;k++)tb.insertAdjacentHTML("beforeend",rowHtml(k));paintSno();saveDay()});
+tb.addEventListener("change",e=>{const t=e.target;return;const i=idx(t),cn=t.value.trim();
+  const m=pool().reverse().find(x=>x!==rows[i]&&String(x[3]).trim()===cn);
+  if(m){[7,8,9,10,12].forEach(c=>{if(!String(rows[i][c]).trim()){rows[i][c]=m[c];cell(i,c).value=m[c]}});saveDay()}refreshLists()});
+tb.addEventListener("keydown",e=>{const t=e.target;if(t.dataset.c===undefined)return;const i=idx(t),c=+t.dataset.c;
+  if(e.ctrlKey&&e.key.toLowerCase()==="d"){e.preventDefault();if(i>0){rows[i][c]=rows[i-1][c];t.value=rows[i][c];if(c===MI)total();saveDay()}return}
+  if(e.key==="Enter"||e.key==="ArrowDown"){e.preventDefault();go(e.shiftKey&&e.key==="Enter"?i-1:i+1,c)}
+  else if(e.key==="ArrowUp"){e.preventDefault();go(i-1,c)}
+  else if(e.key==="ArrowRight"&&t.selectionStart===t.value.length&&t.selectionEnd===t.value.length){e.preventDefault();go(i,c+1)}
+  else if(e.key==="ArrowLeft"&&t.selectionStart===0&&t.selectionEnd===0){e.preventDefault();go(i,c-1)}});
+tb.addEventListener("paste",e=>{const t=e.target;if(t.dataset.c===undefined)return;const txt=(e.clipboardData||window.clipboardData).getData("text");if(!/[\t\n]/.test(txt.trim()))return;
+  e.preventDefault();const i0=idx(t),c0=+t.dataset.c;
+  txt.replace(/\r/g,"").replace(/\n+$/,"").split("\n").forEach((ln,a)=>{const i=i0+a;while(i>=rows.length)rows.push(newRow(rows.length+1));ln.split("\t").forEach((v,b)=>{if(c0+b<COLS)rows[i][c0+b]=v.trim()})});
+  ensureBlank();saveDay();render()});
+function rowOp(b,op){const i=idx(b);
+  if(op==="dup")rows.splice(i+1,0,[...rows[i]]);else if(op==="ins")rows.splice(i+1,0,newRow(0));else rows.splice(i,1);
+  renum();ensureBlank();saveDay();render()}
+function addRows(n){for(let k=0;k<n;k++)rows.push(newRow(rows.length+1));render()}
+function clearSheet(){if(confirm("Is sheet ki sab entries clear karun?")){rows=[];days[cur]=[];while(rows.length<MINR)rows.push(newRow(rows.length+1));saveDay();render()}}
+const heads=()=>[...document.querySelectorAll("#hd th")].slice(0,COLS).map(t=>t.textContent.trim());
+document.querySelectorAll("#hd th").forEach((t,i)=>{if(i<COLS)t.contentEditable="true"});
+try{const s=JSON.parse(localStorage.getItem("fa2_heads")||"null");if(s){$("ttl").textContent=s.t||"FOLDING APPROVAL";document.querySelectorAll("#hd th").forEach((t,i)=>{if(i<COLS&&s.h[i])t.textContent=s.h[i]})}}catch(e){}
+function saveHeads(){try{localStorage.setItem("fa2_heads",JSON.stringify({t:$("ttl").textContent.trim(),h:heads()}))}catch(e){}}
+$("ttl").addEventListener("input",saveHeads);$("hd").addEventListener("input",saveHeads);
+function pdf(){
+  const {jsPDF}=window.jspdf;const d=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
+  const w=d.internal.pageSize.getWidth();
+  d.setFillColor(188,214,240);d.rect(10,8,w-20,8,"F");
+  d.setFont("helvetica","bolditalic");d.setFontSize(11);d.text($("ttl").textContent.trim()||"FOLDING APPROVAL",w/2,13.5,{align:"center"});
+  d.autoTable({startY:18,margin:{left:10,right:10},theme:"grid",head:[heads()],
+    body:rows.filter(filled).map(r=>r.map((v,c)=>c===MI?num(v).toLocaleString("en-US"):v)),
+    foot:[[{content:"",colSpan:11},{content:sum().toLocaleString("en-US"),styles:{halign:"center"}},{content:"",colSpan:2}]],
+    styles:{fontSize:7,cellPadding:1.3,halign:"center",valign:"middle",lineColor:[120,120,120],lineWidth:.1,textColor:20},
+    headStyles:{fillColor:[143,207,143],textColor:20,fontStyle:"bold"},
+    footStyles:{fillColor:[255,255,255],textColor:20,fontStyle:"bold",fontSize:9}});
+  d.setFont("helvetica","bold");d.setFontSize(9);d.setTextColor(20);d.text("Prepared by: "+$("prep").textContent.trim(),10,Math.min(d.lastAutoTable.finalY+12,d.internal.pageSize.getHeight()-8));
+  return d;
+}
+const fname=()=>"Folding_Approval_"+cur+".pdf";
+function dl(){if(!rows.some(filled)){alert("Pehle entry karo");return false}pdf().save(fname());return true}
+async function shareDirect(){
+  if(!rows.some(filled)){alert("Pehle entry karo");return}
+  const f=new File([pdf().output("blob")],fname(),{type:"application/pdf"});
+  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:"Folding Approval "+cur,text:"Folding Approval "+cur});return}catch(e){if(e.name==="AbortError")return}}
+  alert("Is browser me direct PDF share support nahi hai. 'WhatsApp Web' button dabao: PDF download hogi aur WhatsApp khulega, phir chat me 📎 se PDF attach karo.");
+}
+async function send(){
+  if(!rows.some(filled)){alert("Pehle entry karo");return}
+  if(/Android|iPhone|iPad/i.test(navigator.userAgent)){
+    const f=new File([pdf().output("blob")],fname(),{type:"application/pdf"});
+    if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:$("sub").value,text:$("sub").value});return}catch(e){if(e.name==="AbortError")return}}
+  }
+  dl();
+  const n=$("to").value.replace(/\D/g,""),t=encodeURIComponent($("sub").value+" "+cur+" - Total "+sum().toLocaleString("en-US")+" meters");
+  setTimeout(()=>{window.open("https://wa.me/"+n+"?text="+t,"_blank")},600);
+  $("msg").textContent="✅ PDF download ho gayi. WhatsApp Web khul gaya: chat kholo → 📎 → Document → abhi download hui PDF chuno (ya file chat me drag kar do).";
+}
+try{const p=localStorage.getItem("fa2_prepname");if(p!==null)$("prep").textContent=p}catch(e){}
+function syncPrep(){const v=$("prep").textContent.trim();try{localStorage.setItem("fa2_prepname",v)}catch(e){}}
+$("prep").addEventListener("input",syncPrep);syncPrep();
+loadDay(cur);
+</script>
+</body>
+</html>
