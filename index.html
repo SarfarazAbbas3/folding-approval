@@ -136,22 +136,23 @@ function nowD(){const d=new Date();return String(d.getDate()).padStart(2,"0")+"-
 function nowT(){const d=new Date();let h=d.getHours();const m=String(d.getMinutes()).padStart(2,"0"),a=h>=12?"PM":"AM";h=h%12||12;return h+":"+m+a}
 let days={};try{days=JSON.parse(localStorage.getItem("fa2_days")||"{}")}catch(e){}
 try{["to","sub"].forEach(k=>{const v=localStorage.getItem("fa2_"+k);if(v)$(k).value=v;$(k).addEventListener("input",()=>{try{localStorage.setItem("fa2_"+k,$(k).value)}catch(e){}})})}catch(e){}
-let cur=nowD(),rows=[];
+let cur=Object.keys(days).filter(k=>days[k].length).sort((a,b)=>dkey(b).localeCompare(dkey(a)))[0]||"current",rows=[];
 function newRow(n){return Array(COLS).fill("")}
 function renum(){}
 const MINR=12,MINB=3;
 function ensureBlank(){let t=0;for(let i=rows.length-1;i>=0&&!filled(rows[i]);i--)t++;while(t<MINB){rows.push(newRow(rows.length+1));t++}}
 function pool(){const a=[...SEED];Object.keys(days).forEach(k=>{if(k!==cur)a.push(...days[k])});return a.concat(rows.filter(filled))}
-function saveDay(){days[cur]=rows.filter(filled);try{localStorage.setItem("fa2_days",JSON.stringify(days))}catch(e){}fillDays()}
+function saveDay(){heroDate();days[cur]=rows.filter(filled);try{localStorage.setItem("fa2_days",JSON.stringify(days))}catch(e){}fillDays()}
 function dkey(s){return s.split("-").reverse().join("")}
 function fillDays(){const ks=[...new Set([...Object.keys(days).filter(k=>days[k].length),nowD(),cur])].sort((a,b)=>dkey(b).localeCompare(dkey(a)));
   $("day").innerHTML=ks.map(k=>`<option value="${k}" ${k===cur?"selected":""}>${k}${k===nowD()?" (Aaj)":""}</option>`).join("")+`<option value="__new">+ Nayi date ki sheet...</option>`}
 function pickDay(v){if(v==="__new"){v=prompt("Date (DD-MM-YYYY)",nowD());if(!v){fillDays();return}}loadDay(v.trim())}
-function loadDay(d){if(rows.length)saveDay();cur=d;$("heroDay").textContent="Sheet: "+d;rows=(days[d]||[]).map(r=>[...r]);while(rows.length<MINR)rows.push(newRow(rows.length+1));ensureBlank();render();fillDays()}
+function loadDay(d){if(rows.length)saveDay();cur=d;rows=(days[d]||[]).map(r=>[...r]);while(rows.length<MINR)rows.push(newRow(rows.length+1));ensureBlank();render();fillDays()}
 function rowHtml(i){const r=rows[i];return "<tr>"+r.map((v,c)=>`<td data-l="${esc(heads()[c]||"")}"><input data-c="${c}" ${c===MI?'inputmode="decimal"':""} ${c===0?'readonly tabindex="-1"':""} value="${esc(v)}"></td>`).join("")+`<td class="a"><button title="Copy row" onclick="rowOp(this,'dup')">⧉</button> <button title="Row add" onclick="rowOp(this,'ins')">＋</button> <button title="Delete" onclick="rowOp(this,'del')" style="color:#d33">✕</button></td></tr>`}
 function sno(){let n=0;rows.forEach(r=>{r[0]=filled(r)?String(++n):""})}
 function paintSno(){sno();[...tb.children].forEach((tr,i)=>{const x=tr.querySelector("input");if(x)x.value=rows[i][0]})}
-function render(){sno();$("tb").innerHTML=rows.map((_,i)=>rowHtml(i)).join("");total();refreshLists()}
+function heroDate(){const f=rows.find(filled);$("heroDay").textContent=f&&String(f[1]).trim()?"Sheet: "+String(f[1]).trim():""}
+function render(){sno();heroDate();$("tb").innerHTML=rows.map((_,i)=>rowHtml(i)).join("");total();refreshLists()}
 function sum(){return rows.filter(filled).reduce((a,r)=>a+num(r[MI]),0)}
 function total(){$("tot").textContent=$("tot2").textContent=sum().toLocaleString("en-US")}
 function refreshLists(){Object.keys(LISTS).forEach(c=>{const u=[...new Set(pool().map(r=>String(r[c]||"").trim()).filter(Boolean))];$(LISTS[c]).innerHTML=u.map(v=>`<option value="${esc(v)}">`).join("")})}
@@ -198,12 +199,13 @@ function pdf(){
   d.setFont("helvetica","bold");d.setFontSize(9);d.setTextColor(20);d.text("Prepared by: "+$("prep").textContent.trim(),10,Math.min(d.lastAutoTable.finalY+12,d.internal.pageSize.getHeight()-8));
   return d;
 }
-const fname=()=>"Folding_Approval_"+cur+".pdf";
+const dateOf=()=>{const f=rows.find(filled);return (f&&String(f[1]).trim())||nowD()};
+const fname=()=>"Folding_Approval_"+dateOf().replace(/[^\w\-]+/g,"-")+".pdf";
 function dl(){if(!rows.some(filled)){alert("Pehle entry karo");return false}pdf().save(fname());return true}
 async function shareDirect(){
   if(!rows.some(filled)){alert("Pehle entry karo");return}
   const f=new File([pdf().output("blob")],fname(),{type:"application/pdf"});
-  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:"Folding Approval "+cur,text:"Folding Approval "+cur});return}catch(e){if(e.name==="AbortError")return}}
+  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:"Folding Approval "+dateOf(),text:"Folding Approval "+dateOf()});return}catch(e){if(e.name==="AbortError")return}}
   alert("Is browser me direct PDF share support nahi hai. 'WhatsApp Web' button dabao: PDF download hogi aur WhatsApp khulega, phir chat me 📎 se PDF attach karo.");
 }
 async function send(){
@@ -213,7 +215,7 @@ async function send(){
     if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:$("sub").value,text:$("sub").value});return}catch(e){if(e.name==="AbortError")return}}
   }
   dl();
-  const n=$("to").value.replace(/\D/g,""),t=encodeURIComponent($("sub").value+" "+cur+" - Total "+sum().toLocaleString("en-US")+" meters");
+  const n=$("to").value.replace(/\D/g,""),t=encodeURIComponent($("sub").value+" "+dateOf()+" - Total "+sum().toLocaleString("en-US")+" meters");
   setTimeout(()=>{window.open("https://wa.me/"+n+"?text="+t,"_blank")},600);
   $("msg").textContent="✅ PDF download ho gayi. WhatsApp Web khul gaya: chat kholo → 📎 → Document → abhi download hui PDF chuno (ya file chat me drag kar do).";
 }
